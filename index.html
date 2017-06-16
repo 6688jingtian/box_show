@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>多块立方体轮播特效</title>
+		<style id="css">
+			*{padding: 0;margin: 0;}
+			li{list-style: none;}
+			#banner
+			{
+				height: 360px; 
+				width: 800px; 
+				box-shadow: 0 0 10px pink;
+				margin: 100px auto;
+				perspective: 830px;
+			}
+			#banner ul
+			{
+				height: 360px;
+			}
+			#banner ul li
+			{
+				height: 360px; 
+				position: relative;
+				transform-style: preserve-3d;
+			    float: left;
+			    transform-origin: 50% 50% -180px;
+			    /*transition: 1s 1s;*/
+			}
+			#banner ul li div
+			{
+				width: 100%; 
+				height: 100%; 
+				position: absolute;
+			}
+			#banner ul li div:nth-child(1)
+			{
+				top: -360px;
+				transform-origin:bottom;
+				transform:rotateX(90deg);			   
+			    background-image: url("img/1.jpg");
+			}/*上*/
+			#banner ul li div:nth-child(2)
+			{
+				top: 360px;
+				transform-origin:top;
+				transform:rotateX(-90deg);			    
+			    background-image: url("img/2.jpg");
+			}/*下*/
+			#banner ul li div:nth-child(3)
+			{
+				background-image:url("img/3.jpg");
+			}/*前*/ 
+			#banner ul li div:nth-child(4)
+			{
+				background-image:url("img/4.jpg");
+			    transform:translateZ(-360px) rotateX(180deg);
+			}/*后*/
+			ol li
+			{
+				height: 40px;  
+				width: 40px; 
+				border-radius: 50%; 
+				background: #ccc; 
+				float: left;
+				margin: 10px;
+		    }
+		    #wo
+		    {
+		    	height: 50px;
+		    	width: 250px;
+		    	margin: 10px auto;
+		    }
+			ol li.curr{background: red;} 
+		</style>
+	</head>
+	<body>
+		<div id="banner">
+			<ul>
+			</ul>
+			<div id="wo">
+				<ol>
+					<li class="curr"></li>
+					<li></li>
+					<li></li>
+					<li></li>
+			    </ol>
+			</div>  
+		</div>
+		<script>
+			var sum=20;
+			var i=0;
+			var html='',css='',lazy='',z=0,zIndex='';
+			var w=800/sum;
+			var oUl=document.getElementsByTagName('ul')[0];
+			var oOl=document.getElementsByTagName('ol')[0];
+			var oCss=document.getElementById('css');			
+			var aLi=oOl.getElementsByTagName('li');
+			for(var i=0;i<sum;i++)
+			{
+				html += "<li style=width:"+w+"px><div></div><div></div><div></div><div></div></li>";
+				if(i>sum/2)
+				{
+					z--;
+					zIndex +="#banner ul li:nth-child("+(i+1)+"){z-index:"+z+"}";
+				}
+				css += "#banner ul li:nth-child("+(i+1)+") div{background-position:"+i*-w+"px}";
+				lazy += "#banner ul li:nth-child("+(i+1)+"){transition:1s "+i*0.04+"s}"
+			}
+			oUl.innerHTML = html;
+			oCss.innerHTML += css + lazy + zIndex;
+			for(var i=0;i<aLi.length;i++)
+			{
+				aLi[i].index=i;
+				aLi[i].onclick=function()
+				{
+					for(var j=0;j<aLi.length;j++)
+					{
+						aLi[j].className='';
+					}
+					this.className="curr";
+					oCss.innerHTML+="#banner ul li{transform:rotateX("+this.index*-90+"deg)}"
+				};
+			}
+			i=0;
+			var timer=setInterval(function()
+			{
+				if(i<aLi.length)
+				{
+					aLi[i].index=i;
+					for(var j=0;j<aLi.length;j++)
+					{
+						aLi[j].className='';
+					}
+					aLi[i].className="curr";
+					oCss.innerHTML+="#banner ul li{transform:rotateX("+aLi[i].index*-90+"deg)}"
+				}
+				else
+				{
+					i=0;
+					aLi[i].index=i;
+					for(var j=0;j<aLi.length;j++)
+					{
+						aLi[j].className='';
+					}
+					aLi[i].className="curr";
+					oCss.innerHTML+="#banner ul li{transform:rotateX("+aLi[i].index*-90+"deg)}"
+				}
+				i++;
+			},1750);
+		</script>
+	</body>
+</html>
